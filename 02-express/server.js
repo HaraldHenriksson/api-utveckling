@@ -3,6 +3,7 @@
 
 const express = require('express')
 const oneliners = require('./data/oneliners.json')
+const users = require('./data/users.json')
 const _ = require('lodash')
 const app = express()
 const morgan = require('morgan')
@@ -61,6 +62,11 @@ app.get('/joke', (req, res) => {
 		Joke: joke
 	})
 })
+// GET /users
+// List all users
+app.get('/users', (req, res) => {
+	res.send(users)
+})
 
 // Catch requests where a route does not exist
 // app.use( (req, res) => {
@@ -70,5 +76,5 @@ app.get('/joke', (req, res) => {
 // })
 
 app.listen(port, () => {
-	console.log(`Example listening on localhost ${port}`)
+	console.log(`Server started on localhost ${port}🥳`)
 })
