@@ -5,6 +5,8 @@ const express = require('express')
 
 const oneliners = require('./data/oneliners.json')
 
+const _ = require('lodash')
+
 const app = express()
 
 const port = 3000
@@ -25,9 +27,20 @@ app.get('/coffee', (req, res) => {
 })
 
 // GET random joke
+// app.get('/joke', (req, res) => {
+
+// 	const i = Math.floor(Math.random() * oneliners.length)
+// 	const joke = oneliners[i]
+
+// 	res.send({
+// 		Joke: joke
+// 	})
+// })
+
+// GET reandom joke with lodash
 app.get('/joke', (req, res) => {
 
-	const i = Math.floor(Math.random() * oneliners.length)
+	const i = _.random(0, oneliners.length - 1)
 	const joke = oneliners[i]
 
 	res.send({
