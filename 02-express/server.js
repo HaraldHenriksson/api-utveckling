@@ -68,6 +68,22 @@ app.get('/users', (req, res) => {
 	res.send(users)
 })
 
+// GET /users/:userId
+app.get('/users/:userId', (req, res) => {
+	const userId = Number(req.params.userId)
+
+
+	// Find user in users array
+	const user = users.find(user => user.id === userId)
+
+	// Send user as response
+	if(user) {
+        res.send(user);
+    } else {
+        res.status(404).send({error: 'User not found'});
+    }
+})
+
 // Catch requests where a route does not exist
 // app.use( (req, res) => {
 // 	res.status(404).send({
