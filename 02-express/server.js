@@ -40,8 +40,10 @@ app.get('/coffee', (req, res) => {
 // GET reandom joke with lodash
 app.get('/joke', (req, res) => {
 
-	const i = _.random(0, oneliners.length - 1)
-	const joke = oneliners[i]
+	// const i = _.random(0, oneliners.length - 1)
+	// const joke = oneliners[i]
+
+	const joke = _.sample(oneliners)
 
 	res.send({
 		Joke: joke
