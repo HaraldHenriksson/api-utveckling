@@ -10,6 +10,9 @@ const morgan = require('morgan')
 const port = 3000
 const now = new Date()
 
+// Parse any incoming JSON
+app.use( express.json() )
+
 // Middleware with morgan
 app.use( morgan('dev'))
 
@@ -65,7 +68,14 @@ app.get('/joke', (req, res) => {
 // GET /users
 // List all users
 app.get('/users', (req, res) => {
+	console.log("query-string:", req.query)
 	res.send(users)
+})
+
+// POST /Users
+// Create a new user
+app.post('/users', (req, res) => {
+	console.log(req.body)
 })
 
 // GET /users/:userId
