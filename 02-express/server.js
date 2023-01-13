@@ -75,7 +75,11 @@ app.get('/users', (req, res) => {
 // POST /Users
 // Create a new user
 app.post('/users', (req, res) => {
-	console.log(req.body)
+	console.log("Create user?")
+
+	console.log("Body?", req.body)
+
+	res.send({})
 })
 
 // GET /users/:userId
