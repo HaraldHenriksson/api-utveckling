@@ -10,7 +10,7 @@ const morgan = require('morgan')
 const PORT = 3000
 
 // Get the client
-const mysql = require('mysql2')
+const mysql = require('mysql2/promise')
 
 const connection = mysql.createConnection({
 	host: process.env.DATABASE_HOST,
@@ -34,6 +34,13 @@ app.get('/', (req, res) => {
 	res.send({
 		message: "Oh, hi there ☺️",
 	})
+})
+
+//GET movies
+app.get('/movies', async (req, res) => {
+	const db = await connection
+	const [rows] = await db.query('SELECT * FROM imdb_movies')
+	res.send(rows)
 })
 
 // Catch requests where a route does not exist
