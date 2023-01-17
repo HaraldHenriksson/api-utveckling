@@ -50,14 +50,14 @@ app.get('/movies/:movieId', async (req, res) => {
 	const db = await connection
 	const [rows] = await db.query(`SELECT * FROM imdb_movies WHERE id="${movieId}"`)
 
-	const movie = rows.find(movie => movie.id === movieId)
+	//const movie = rows.find(movie => movie.id === movieId)
 
-	if(!movie) {
+	if(!rows.length) {
 		res.status(404).send({error: `Movie ${movieId} not found`});
-    } else {
-		res.send(movie);
+		return
     }
 
+	res.send(rows[0]);
 })
 
 
