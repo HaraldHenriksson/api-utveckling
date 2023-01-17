@@ -3,10 +3,21 @@
  */
 
 // Require stuff
+require('dotenv').config()
 const express = require('express')
 const _ = require('lodash')
 const morgan = require('morgan')
 const PORT = 3000
+
+// Get the client
+const mysql = require('mysql2')
+
+const connection = mysql.createConnection({
+	host: process.env.DATABASE_HOST,
+	user: process.env.DATABASE_USER,
+	password: process.env.DATABASE_PASSWORD,
+	name: process.env.DATABASE_NAME,
+})
 
 // Create a new Express app
 const app = express()
