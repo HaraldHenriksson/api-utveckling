@@ -48,12 +48,12 @@ app.get('/movies/:movieId', async (req, res) => {
 	const movieId = Number(req.params.movieId)
 
 	const db = await connection
-	const [rows] = await db.query(`SELECT * FROM imdb_movies WHERE id="${movieId}"`)
+	const [rows] = await db.query(`SELECT * FROM imdb_movies WHERE id=?`, [movieId])
 
 	//METHOD WITH RETURN CALLED GUARD CLAUSE
 	if(!rows.length) {
 		res.status(404).send({error: `Movie ${movieId} not found`});
-		return
+		return //stops code from continue
     }
 
 	res.send(rows[0]);
