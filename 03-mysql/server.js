@@ -43,6 +43,24 @@ app.get('/movies', async (req, res) => {
 	res.send(rows)
 })
 
+app.get('/movies/:movieId', async (req, res) => {
+
+	const db = await connection
+	const [rows] = await db.query('SELECT * FROM imdb_movies')
+
+	const movieId = Number(req.params.movieId)
+
+	const movie = rows.find(movie => movie.id === movieId)
+
+	if(!movie) {
+		res.status(404).send({error: `Movie not found ${movieId}`});
+    } else {
+		res.send(movie);
+    }
+
+})
+
+
 // Catch requests where a route does not exist
 app.use((req, res) => {
 	res.status(404).send({
