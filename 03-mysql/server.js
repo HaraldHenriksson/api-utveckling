@@ -50,7 +50,7 @@ app.get('/movies/:movieId', async (req, res) => {
 	const db = await connection
 	const [rows] = await db.query(`SELECT * FROM imdb_movies WHERE id=?`, [movieId])
 
-	//METHOD WITH RETURN CALLED GUARD CLAUSE
+	// METHOD WITH RETURN CALLED GUARD CLAUSE
 	if(!rows.length) {
 		res.status(404).send({error: `Movie ${movieId} not found`});
 		return //stops code from continue
@@ -58,6 +58,26 @@ app.get('/movies/:movieId', async (req, res) => {
 
 	res.send(rows[0]);
 })
+
+// POST
+// Create a movie
+app.post('/movies', async (req, res) => {
+	console.log("Incoming!", req.body)
+
+	const db = await connection
+	const result = await db.query(`INSERT INTO movies SET title = ?, genre = ?, runtime = ?, release_date = ?`, {
+		title: req.body.title,
+		genre: req.body.genre,
+		runtime: req.body.runtime,
+		release_date: req.body.release_date,
+	})
+
+	res.status(201).send({
+		...req.body,
+		id: result.insertId,
+	})
+})
+
 
 
 // Catch requests where a route does not exist
