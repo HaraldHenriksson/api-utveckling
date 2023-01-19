@@ -103,7 +103,29 @@ app.post('/movies', async (req, res) => {
 	})
 })
 
+app.patch('/movies/:movieId', async (req, res) => {
+	const db = await connection
 
+	try{
+	const result = db.query('UPDATE movies SET ? WHERE id = ?', [req.body, req.params.movieId])
+	} catch (err) {
+		res.status(500).send({ message: "You send bad data?!"})
+	}
+
+	res.send(req.body)
+})
+
+app.delete('/movies/:movieId', async (req, res) => {
+	const db = await connection
+
+	try{
+	const result = db.query('DELETE FROM movies WHERE id = ?', [req.params.movieId])
+	} catch (err) {
+		res.status(500).send({ message: "You try to delete already deleted movie?!"})
+	}
+
+	res.send({ message: "K."})
+})
 
 // Catch requests where a route does not exist
 app.use((req, res) => {
