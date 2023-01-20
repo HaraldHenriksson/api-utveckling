@@ -16,23 +16,23 @@ const main = async () => {
 		// 	manufacturer: "Apple"
 		// },
 
-		  const user = await prisma.users.findMany({
-		  	where: {
-				name: {
-					contains: "an",
-				},
-		  	},
-			orderBy: [
-				{
-				name: 'asc',
-				},
-				{
-					id: 'desc'
-				}
-		],
-		take: 2,
-		skip: 1,
-		  })
+		//   const user = await prisma.users.findMany({
+		//   	where: {
+		// 		name: {
+		// 			contains: "an",
+		// 		},
+		//   	},
+		// 	orderBy: [
+		// 		{
+		// 		name: 'asc',
+		// 		},
+		// 		{
+		// 			id: 'desc'
+		// 		}
+		// ],
+		// take: 2,
+		// skip: 1,
+		//   })
 
 	// Get a specific user
 // 	const users = await prisma.users.findUnique({
@@ -40,10 +40,19 @@ const main = async () => {
 // 			id: 4,
 // 		}
 // 	})
- 	console.log("User:", user)
+ 	//console.log("User:", user)
 // }
 		// console.log("User:", users)
 
+
+		// Get a specific user and their phone
+		const user = await prisma.users.findMany({
+			include: {
+				phones: true
+			}
+		})
+
+		console.log("USER:", user)
 }
 
 main()
