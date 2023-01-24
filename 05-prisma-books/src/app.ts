@@ -24,10 +24,68 @@ app.get('/authors', async (req, res) => {
 	}
 })
 
+// POST AUTHOR
+
+app.post('/authors', async (req, res) => {
+	try {
+		const author = await prisma.author.create({
+			data: {
+				name: req.body.name,
+			}
+		})
+
+		res.status(201).send(author)
+
+	} catch (err) {
+		res.status(500).send({ message: "Something went wrong"})
+	}
+})
+
+// POST /AUTHOR/:AUTHORID/BOOKS
+
+app.post('/authors/:authorId/books', async (req, res) => {
+	try {
+		const result = await prisma.author.update({
+			where: {
+				id: Number(req.params.authorId),
+			},
+			data: {
+				books: {
+					connect: {
+						id: req.body.bookId,
+					}
+				}
+			}
+		})
+		res.send(result)
+	} catch (err) {
+		res.status(500).send({ message: "Something went wrong"})
+	}
+})
+
+
+// GET BOOKS
+
 app.get('/books', async (req, res) => {
 	try {
 		const book = await prisma.book.findMany()
 		res.send(book)
+	} catch (err) {
+		res.status(500).send({ message: "Something went wrong"})
+	}
+})
+
+app.post('/books', async (req, res) => {
+	try {
+		const book = await prisma.book.create({
+			data: {
+				title: req.body.title,
+				pages: req.body.pages,
+			}
+		})
+
+		res.status(201).send(book)
+
 	} catch (err) {
 		res.status(500).send({ message: "Something went wrong"})
 	}
