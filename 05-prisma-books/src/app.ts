@@ -41,6 +41,21 @@ app.post('/authors', async (req, res) => {
 	}
 })
 
+// GET AUTHOR
+
+app.get('/authors', async (req, res) => {
+	try {
+		const authors = await prisma.author.findMany({
+			include: {
+				books: true,
+			}
+		})
+		res.send(authors)
+	} catch (err) {
+		res.status(500).send({ message: "Something went wrong" })
+	}
+})
+
 // POST /AUTHOR/:AUTHORID/BOOKS
 
 app.post('/authors/:authorId/books', async (req, res) => {
@@ -75,6 +90,8 @@ app.get('/books', async (req, res) => {
 	}
 })
 
+
+// POST NEW BOOK
 app.post('/books', async (req, res) => {
 	try {
 		const book = await prisma.book.create({
