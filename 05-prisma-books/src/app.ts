@@ -15,4 +15,22 @@ app.get('/', (req, res) => {
 	})
 })
 
+app.get('/authors', async (req, res) => {
+	try {
+		const authors = await prisma.author.findMany()
+		res.send(authors)
+	} catch (err) {
+		res.status(500).send({ message: "Something went wrong"})
+	}
+})
+
+app.get('/books', async (req, res) => {
+	try {
+		const book = await prisma.book.findMany()
+		res.send(book)
+	} catch (err) {
+		res.status(500).send({ message: "Something went wrong"})
+	}
+})
+
 export default app
