@@ -52,7 +52,7 @@ const main = async () => {
 			}
 		})
 
-		console.log("USER:", user)
+		console.dir(user, { depth: null })
 }
 
 main()
