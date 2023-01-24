@@ -21,7 +21,7 @@ app.get('/users', async (req, res) => {
 
 app.get('/phones', async (req, res) => {
 	try {
-	const phones = await prisma.users.findMany()
+	const phones = await prisma.phones.findMany()
 	res.send(phones)
 	} catch (err) {
 		console.error(err)
@@ -29,14 +29,46 @@ app.get('/phones', async (req, res) => {
 	}
 })
 
-app.get('/phones', async (req, res) => {
+// app.get('/phones', async (req, res) => {
+// 	try {
+// 	const phones = await prisma.users.findUnique()
+// 	res.send(phones)
+// 	} catch (err) {
+// 		console.error(err)
+// 		res.status(500).send( { message: "Something went wrong quering the database."})
+// 	}
+// })
+
+app.get('/users/:userId', async (req, res) => {
+	const userId = Number(req.params.userId)
+
 	try {
-	const phones = await prisma.users.findUnique()
-	res.send(phones)
+	const user = await prisma.users.findUniqueOrThrow({
+		where: {
+			id: userId,
+		}
+	})
+	res.send(user)
 	} catch (err) {
-		console.error(err)
-		res.status(500).send( { message: "Something went wrong quering the database."})
+		res.status(404).send( { message: "User not found."})
 	}
+
+})
+
+app.get('/phone/:phoneId', async (req, res) => {
+	const phoneId = Number(req.params.phoneId)
+
+	try {
+	const phone = await prisma.phones.findUniqueOrThrow({
+		where: {
+			id: phoneId,
+		}
+	})
+	res.send(phone)
+	} catch (err) {
+		res.status(404).send( { message: "User not found."})
+	}
+
 })
 
 export default app
