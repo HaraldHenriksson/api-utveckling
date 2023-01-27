@@ -1,5 +1,5 @@
 /**
- * Book Template
+ * Book Controller
  */
 import { Request, Response } from 'express'
 import prisma from '../prisma'
@@ -11,7 +11,10 @@ export const index = async (req: Request, res: Response) => {
 	try {
 		const books = await prisma.book.findMany()
 
-		res.send(books)
+		res.send({
+			status: "success",
+			books: books,
+		})
 
 	} catch (err) {
 		console.error(err)
