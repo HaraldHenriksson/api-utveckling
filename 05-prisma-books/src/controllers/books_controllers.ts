@@ -13,7 +13,7 @@ export const index = async (req: Request, res: Response) => {
 
 		res.send({
 			status: "success",
-			books: books,
+			data: books,
 		})
 
 	} catch (err) {
@@ -39,11 +39,14 @@ export const show = async (req: Request, res: Response) => {
 			}
 		})
 
-		res.send(book)
+		res.send({
+			status: "success",
+			data: book,
+		})
 
 	} catch (err) {
 		console.error(err)
-		return res.status(404).send({ message: "Not found" })
+		return res.status(404).send({status: "error", message: "Not found" })
 	}
 }
 
@@ -61,11 +64,14 @@ export const store = async (req: Request, res: Response) => {
 			}
 		})
 
-		res.send(book)
+		res.send({
+			status: "success",
+			data: book,
+		})
 
 	} catch (err) {
 		console.error(err)
-		res.status(500).send({ message: "Something went wrong" })
+		res.status(500).send({status: "error", message: "Something went wrong" })
 	}
 }
 
