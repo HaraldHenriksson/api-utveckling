@@ -8,20 +8,20 @@ datasource db {
 }
 
 model Book {
-    id          Int       @id @default(autoincrement())
+    id          Int       @id @default(autoincrement()) @db.UnsignedInt
     title       String
     pages       Int       @db.UnsignedInt
     isbn        String?
     authors     Author[]
     publisherId Int       @db.UnsignedInt
     publisher   Publisher @relation(fields: [publisherId], references: [id])
+    cover       Json?     @default("{}")
 }
 
 model Author {
-    id        Int       @id @default(autoincrement()) @db.UnsignedInt
-    name      String
-    birthdate DateTime? @db.Date
-    books     Book[]
+    id    Int    @id @default(autoincrement()) @db.UnsignedInt
+    name  String
+    books Book[]
 }
 
 model Publisher {

@@ -1,26 +1,33 @@
-import express from 'express'
+import express from "express"
 import authors from './authors'
 import books from './books'
 import publishers from './publishers'
 
-// Instantiate a new router
+// instantiate a new router
 const router = express.Router()
 
-
-// GET
+/**
+ * GET /
+ */
 router.get('/', (req, res) => {
 	res.send({
 		message: "I AM API, BEEP BOOP",
 	})
 })
 
-// /authors
+/**
+ * /authors
+ */
 router.use('/authors', authors)
 
-// books
+/**
+ * /books
+ */
 router.use('/books', books)
 
-// publishers
+/**
+ * /publishers
+ */
 router.use('/publishers', publishers)
 
 export default router
