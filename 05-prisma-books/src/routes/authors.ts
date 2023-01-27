@@ -1,20 +1,29 @@
-
-// Handles all /authors routes
-
+/**
+ * Handles all `/authors` routes
+ */
 import express from 'express'
 import prisma from '../prisma'
 const router = express.Router()
 
+/**
+ * GET /authors
+ */
 router.get('/', async (req, res) => {
 	try {
-		const authors = await prisma.author.findMany()
+		const authors = await prisma.author.findMany({
+			include: {
+				books: true,
+			}
+		})
 		res.send(authors)
 	} catch (err) {
-		res.status(500).send({ message: "Something went wrong"})
+		res.status(500).send({ message: "Something went wrong" })
 	}
 })
 
-// POST AUTHOR
+/**
+ * POST /authors
+ */
 router.post('/', async (req, res) => {
 	const birthdate = (new Date(req.body.birthdate)).toISOString()
 
@@ -31,22 +40,9 @@ router.post('/', async (req, res) => {
 	}
 })
 
-// GET AUTHO/
-router.get('/', async (req, res) => {
-	try {
-		const authors = await prisma.author.findMany({
-			include: {
-				books: true,
-			}
-		})
-		res.send(authors)
-	} catch (err) {
-		res.status(500).send({ message: "Something went wrong" })
-	}
-})
-
-// POST /AUTHOR/:AUTHORID/BOOKS
-
+/**
+ * POST /authors/:authorId/books
+ */
 router.post('/:authorId/books', async (req, res) => {
 	try {
 		const result = await prisma.author.update({
@@ -59,11 +55,14 @@ router.post('/:authorId/books', async (req, res) => {
 						id: req.body.bookId,
 					}
 				}
+			},
+			include: {
+				books: true,
 			}
 		})
-		res.send(result)
+		res.status(201).send(result)
 	} catch (err) {
-		res.status(500).send({ message: "Something went wrong"})
+		res.status(500).send({ message: "Something went wrong" })
 	}
 })
 
