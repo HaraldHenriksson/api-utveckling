@@ -15,20 +15,19 @@ router.get('/', async (req, res) => {
 })
 
 // POST AUTHOR
-
 router.post('/', async (req, res) => {
+	const birthdate = (new Date(req.body.birthdate)).toISOString()
+
 	try {
 		const author = await prisma.author.create({
 			data: {
 				name: req.body.name,
-				birthdate: req.body.birthdate,
+				birthdate: birthdate,
 			}
 		})
-
-		res.status(201).send(author)
-
+		res.send(author)
 	} catch (err) {
-		res.status(500).send({ message: "Something went wrong"})
+		res.status(500).send({ message: "Something went wrong" })
 	}
 })
 
