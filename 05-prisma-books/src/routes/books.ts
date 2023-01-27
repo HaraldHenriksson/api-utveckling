@@ -2,17 +2,21 @@ import express from 'express'
 import prisma from '../prisma'
 const router = express.Router()
 
+/**
+ * GET /books
+ */
 router.get('/', async (req, res) => {
 	try {
-		const book = await prisma.book.findMany()
-		res.send(book)
+		const books = await prisma.book.findMany()
+		res.send(books)
 	} catch (err) {
-		res.status(500).send({ message: "Something went wrong"})
+		res.status(500).send({ message: "Something went wrong" })
 	}
 })
 
-
-// POST NEW BOOK
+/**
+ * POST /books
+ */
 router.post('/', async (req, res) => {
 	try {
 		const book = await prisma.book.create({
@@ -20,14 +24,12 @@ router.post('/', async (req, res) => {
 				title: req.body.title,
 				pages: req.body.pages,
 				isbn: req.body.isbn,
-				publisherId: req.body.publisherId
+				publisherId: req.body.publisherId,
 			}
 		})
-
-		res.status(201).send(book)
-
+		res.send(book)
 	} catch (err) {
-		res.status(500).send({ message: "Something went wrong"})
+		res.status(500).send({ message: "Something went wrong" })
 	}
 })
 
