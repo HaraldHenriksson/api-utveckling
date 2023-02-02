@@ -4,6 +4,7 @@
 
 import { body } from 'express-validator'
 import prisma from '../prisma'
+import { getUserByEmail } from '../services/user_service'
 
 export const createUserRules = [
 	// place validation rules here
@@ -14,11 +15,7 @@ export const createUserRules = [
 	// email required + valid email
 	body('email').isEmail().custom(async value => {
 		// check if a User with that emailalready exists
-		const user = await prisma.user.findUnique({
-			where:{
-				email: value,
-			}
-		})
+		const user = await getUserByEmail(value)
 
 		if (user) {
 			// user already exists, throw a erroe
