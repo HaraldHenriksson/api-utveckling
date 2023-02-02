@@ -2,9 +2,11 @@ import express from "express"
 import { body } from 'express-validator'
 import authors from './authors'
 import books from './books'
+import profile from './profile'
 import publishers from './publishers'
 import { register } from '../controllers/register_controller'
 import { createUserRules } from "../validations/user_rules"
+import { basic } from "../middlewares/auth/basic"
 
 // instantiate a new router
 const router = express.Router()
@@ -27,6 +29,11 @@ router.use('/authors', authors)
  * /books
  */
 router.use('/books', books)
+
+/**
+ * /profile
+ */
+router.use('/profile', basic, profile)
 
 /**
  * /publishers
