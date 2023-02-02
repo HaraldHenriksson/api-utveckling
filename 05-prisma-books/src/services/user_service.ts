@@ -2,7 +2,9 @@
 * User Service
  */
 
+import { stringify } from "querystring"
 import prisma from "../prisma"
+import { CreateAuthorData, CreateUserData } from "../types"
 
 
 /**
@@ -16,5 +18,11 @@ export const getUserByEmail = async (email: string) => {
 		where:{
 			email: email,
 		}
+	})
+}
+
+export const createUser = async (data: CreateUserData) => {
+	return await prisma.user.create({
+		data: data,
 	})
 }
