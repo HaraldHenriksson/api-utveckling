@@ -4,6 +4,7 @@
 import Debug from 'debug'
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
+import { createAuthor, getAuthors } from '../services/author_service'
 import prisma from '../prisma'
 
 // Create a new debug instance
@@ -14,12 +15,11 @@ const debug = Debug('prisma-books:author_controller')
  */
 export const index = async (req: Request, res: Response) => {
 	try {
-		const authors = await prisma.author.findMany({
-			include: {
-				books: true,
-			}
+		const authors = await getAuthors()
+		res.send({
+			status: "success",
+			data: authors
 		})
-		res.send(authors)
 	} catch (err) {
 		res.status(500).send({ message: "Something went wrong" })
 	}
@@ -32,14 +32,7 @@ export const show = async (req: Request, res: Response) => {
 	const authorId = Number(req.params.authorId)
 
 	try {
-		const author = await prisma.author.findUniqueOrThrow({
-			where: {
-				id: authorId,
-			},
-			include: {
-				books: true,
-			}
-		})
+		const author = getAuthors()
 
 		res.send({
 			status: "success",
@@ -66,14 +59,15 @@ export const store = async (req: Request, res: Response) => {
 	}
 
 	try {
-		const author = await prisma.author.create({
-			data: {
-				name: req.body.name,
-			}
+		const author = await createAuthor({
+			name: req.body.name,
 		})
-		res.send(author)
+		res.send({
+			status: "success",
+			data: author,
+		})
 	} catch (err) {
-		res.status(500).send({ message: "Something went wrong" })
+		res.status(500).send({ status: "error", message: "Something went wrong" })
 	}
 }
 
@@ -112,6 +106,6 @@ export const addBook = async (req: Request, res: Response) => {
 		res.status(201).send(result)
 	} catch (err) {
 		debug("Error thrown when adding book %o to a author %o: %o", req.body.bookId, req.params.authorId, err)
-		res.status(500).send({ message: "Something went wrong" })
+		res.status(500).send({ status: "error", message: "Something went wrong" })
 	}
 }
