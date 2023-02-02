@@ -3,6 +3,7 @@
 */
 
 import { body } from 'express-validator'
+import prisma from '../prisma'
 
 export const createUserRules = [
 	// place validation rules here
@@ -11,7 +12,19 @@ export const createUserRules = [
 	body('name').isString().withMessage('has to be a string').bail().isLength({ min: 3, max: 191 }).withMessage('has to be 3-191 chars long'),
 
 	// email required + valid email
-	body('email').isEmail(),
+	body('email').isEmail().custom(async value => {
+		// check if a User with that emailalready exists
+		const user = await prisma.user.findUnique({
+			where:{
+				email: value,
+			}
+		})
+
+		if (user) {
+			// user already exists, throw a erroe
+			return Promise.reject("Email already exists")
+		}
+	}),
 
 	// password required
 	body('password').isString().bail().isLength({ min: 6 }),
