@@ -2,12 +2,14 @@
  * HTTP Basic Authentification Middleware
  */
 
+import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express'
 import Debug from 'debug'
+import { getUserByEmail } from '../../services/user_service'
 
-const debug = Debug('prisma-book:basic')
+const debug = Debug('prisma-books:basic')
 
-export const basic = (req: Request, res: Response, next: NextFunction) => {
+export const basic = async (req: Request, res: Response, next: NextFunction) => {
 	debug("Hello from auth/basic!")
 
 	// Make sure Authorization Hearer exists, otherwise bail 🔴
@@ -44,8 +46,29 @@ export const basic = (req: Request, res: Response, next: NextFunction) => {
 	const [email, password] = decodePayload.split(":")
 
 	// Get user form database, otherwise bail 🔴
+	const user = await getUserByEmail(email)
+	if (!user) {
+		debug("User %s does not exist", email)
+
+		return res.status(404).send({
+			status: "fail",
+			data: "Atuorization required",
+		})
+	}
 
 	// Verify hash against credentials, otherwide bail 🔴
+	const result = await bcrypt.compare(password, user.password)
+	if (!result) {
+		debug("Password for user %s didn't match", email)
+
+		return res.status(404).send({
+			status: "fail",
+			data: "Atuorization required",
+		})
+	}
+	debug("Password for user %s was correct", email)
+
+
 
 	// Attach user to Request 🤩
 

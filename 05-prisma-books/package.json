@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "cross-env DEBUG=prisma-books:* nodemon server.ts",
+    "debug": "cross-env DEBUG=prisma-books:* nodemon --inspect server.ts",
     "start": "node build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
