@@ -4,7 +4,7 @@ import authors from './authors'
 import books from './books'
 import profile from './profile'
 import publishers from './publishers'
-import { register } from '../controllers/register_controller'
+import { login, register } from '../controllers/user_controller'
 import { createUserRules } from "../validations/user_rules"
 import { basic } from "../middlewares/auth/basic"
 
@@ -39,6 +39,11 @@ router.use('/profile', basic, profile)
  * /publishers
  */
 router.use('/publishers', publishers)
+
+/**
+ * POST /login
+ */
+router.use('/login', login)
 
 /**
  * /register
