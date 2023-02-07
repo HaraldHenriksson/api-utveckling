@@ -2,6 +2,8 @@
  * HTTP Basic Authentification Middleware
  */
 
+/*
+
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express'
 import Debug from 'debug'
@@ -43,6 +45,8 @@ export const basic = async (req: Request, res: Response, next: NextFunction) => 
 	// decodedPayload = "jn@thehiveresistance.com:abc123"
 
 	// Split decoded payload on `:`
+
+
 	const [email, password] = decodePayload.split(":")
 
 	// Get user form database, otherwise bail 🔴
@@ -75,3 +79,5 @@ export const basic = async (req: Request, res: Response, next: NextFunction) => 
 
 	next()
 }
+
+*/

@@ -6,7 +6,7 @@ import profile from './profile'
 import publishers from './publishers'
 import { login, register } from '../controllers/user_controller'
 import { createUserRules } from "../validations/user_rules"
-import { basic } from "../middlewares/auth/basic"
+//import { basic } from "../middlewares/auth/basic"
 import { validateToken } from "../middlewares/auth/jwt"
 
 // instantiate a new router
