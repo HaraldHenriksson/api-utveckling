@@ -13,9 +13,8 @@ export const getProfile = async (req: Request, res: Response) => {
 
 	debug("WHO DIS??", req.user)
 	res.send({
-		id: req.user.id,
-		name: req.user.name,
-		email: req.user.email,
+		status: "success",
+		data: req.user,
 	})
 }
 

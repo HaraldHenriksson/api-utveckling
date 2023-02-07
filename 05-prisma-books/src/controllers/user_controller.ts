@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
 import { matchedData, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
+import { JwtPayload } from '../types'
 import prisma from '../prisma'
 import { createUser, getUserByEmail } from '../services/user_service'
 
@@ -34,9 +35,10 @@ if (!user) {
 	}
 
 	// construct jqt-payload
-	const payload = {
+	const payload: JwtPayload = {
 		sub: user.id, // sub = subject the token is issued for
 		name: user.name,
+		email: user.email
 	}
 
 	// sign payloag with secret and get acces token
