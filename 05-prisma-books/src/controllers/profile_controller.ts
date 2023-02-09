@@ -14,7 +14,7 @@ export const getProfile = async (req: Request, res: Response) => {
 	debug("WHO DIS??", req.user)
 	res.send({
 		status: "success",
-		data: req.user,
+		data: req.token,
 	})
 }
 

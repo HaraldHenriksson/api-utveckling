@@ -2,7 +2,7 @@
  * HTTP Basic Authentification Middleware
  */
 
-/*
+
 
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express'
@@ -80,4 +80,4 @@ export const basic = async (req: Request, res: Response, next: NextFunction) => 
 	next()
 }
 
-*/
+

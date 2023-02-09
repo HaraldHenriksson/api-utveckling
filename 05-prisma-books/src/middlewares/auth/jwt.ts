@@ -50,7 +50,7 @@ export const validateToken = (req: Request, res: Response, next: NextFunction) =
 		debug("Yay got 📦: %0", payload)
 
 	// Attach User to Request 🤩
-		req.user = payload
+		req.token = payload
 
 	} catch (err) {
 		debug("Token failed verification", err)
