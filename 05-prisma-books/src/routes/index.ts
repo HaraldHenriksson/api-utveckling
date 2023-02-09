@@ -4,7 +4,7 @@ import authors from './authors'
 import books from './books'
 import profile from './profile'
 import publishers from './publishers'
-import { login, register } from '../controllers/user_controller'
+import { login, refresh, register } from '../controllers/user_controller'
 import { createUserRules } from "../validations/user_rules"
 //import { basic } from "../middlewares/auth/basic"
 import { validateToken } from "../middlewares/auth/jwt"
@@ -45,6 +45,11 @@ router.use('/publishers', publishers)
  * POST /login
  */
 router.use('/login', login)
+
+/**
+ * POST /refresh
+ */
+router.post('/refresh', refresh)
 
 /**
  * /register
