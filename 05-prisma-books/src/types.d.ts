@@ -9,7 +9,13 @@ export type CreateAuthorData = {
 export type CreateUserData = {
 	name: string,
 	email: string,
-	password: string
+	password: string,
+}
+
+export type updateUserData = {
+	name?: string,
+	email?: string,
+	password?: string,
 }
 
 export type JwtPayload = {

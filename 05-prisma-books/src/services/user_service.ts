@@ -4,7 +4,7 @@
 
 import { stringify } from "querystring"
 import prisma from "../prisma"
-import { CreateAuthorData, CreateUserData } from "../types"
+import { CreateAuthorData, CreateUserData, updateUserData } from "../types"
 
 
 /**
@@ -21,8 +21,30 @@ export const getUserByEmail = async (email: string) => {
 	})
 }
 
+/**
+ * Create a user
+ *
+ * @param data
+ * @returns
+ */
 export const createUser = async (data: CreateUserData) => {
 	return await prisma.user.create({
 		data: data,
+	})
+}
+
+/**
+ * Update user data
+ *
+ * @param userId
+ * @param userData
+ * @returns
+ */
+export const updateUser = async (userId: number, userData:  updateUserData) => {
+	return await prisma.user.update({
+		where: {
+			id: userId,
+		},
+		data: userData,
 	})
 }
