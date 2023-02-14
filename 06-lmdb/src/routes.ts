@@ -1,5 +1,6 @@
 import express from "express"
 import { Movie } from './resources/movie/movie.model'
+import movieRouter from './resources/movie/movie.router'
 
 // instantiate a new router
 const router = express.Router()
@@ -16,5 +17,10 @@ router.get('/', async (req, res) => {
 		movies: movies,
 	})
 })
+
+/**
+ * /movies
+ */
+router.use('/moves', movieRouter)
 
 export default router
