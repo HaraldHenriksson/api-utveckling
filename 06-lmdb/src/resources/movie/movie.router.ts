@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { index, show } from './movie.controller'
+import { index, show, store } from './movie.controller'
 
 /**
  * GET /movies
@@ -15,6 +15,6 @@ router.get('/:movieId', show)
 /**
  * POST /movies
  */
-router.post('/', () => {})
+router.post('/', store)
 
 export default router

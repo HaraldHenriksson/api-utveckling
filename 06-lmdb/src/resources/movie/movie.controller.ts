@@ -49,3 +49,25 @@ export const show = async (req: Request, res: Response) => {
 		res.status(500).send({ status: "error", message: "Error thrown when finding movie" })
 	}
 }
+
+/**
+ * Create a movie
+ *
+ * POST /movies
+ */
+export const store = async (req: Request, res: Response) => {
+	try {
+		// Create a new movie
+		const movie = await new Movie(req.body).save()
+
+		// Respond with newly created movie
+		res.status(201).send({
+			status: "success",
+			data: movie,
+		})
+
+	} catch (err) {
+		debug("Error thrown when creating movie", err)
+		res.status(500).send({ status: "error", message: "Error thrown when finding movies" })
+	}
+}
