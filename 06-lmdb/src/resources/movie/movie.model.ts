@@ -2,9 +2,10 @@ import { model, Schema, Document } from 'mongoose'
 
 export interface IMovie extends Document {
 	title: string,
-	runtime?: number,
+	runtime: number | null,
 	releaseYear?: number,
-	genre?: string,
+	genre: string[],
+	watched?: Date,
 }
 
 const MovieSchema: Schema = new Schema<IMovie>({
@@ -17,7 +18,13 @@ const MovieSchema: Schema = new Schema<IMovie>({
 	},
 	runtime: {
 		type: Number,
-		 min: 1
+		default: null,
+		 //min: 1
+		 validate(value: number) {
+			if (value < 1 && value !== null) {
+				throw new Error("Just because you thought the movie wat bad, it shouldn't have a zero or negative value")
+			}
+		 }
 	},
 	releaseYear: {
 		 type: Number,
@@ -26,10 +33,17 @@ const MovieSchema: Schema = new Schema<IMovie>({
 		 default: new Date().getFullYear(),
 	},
 	genre: {
-		type: String,
+		type: [String],
 		lowercase: true,
-		enum: ["action", "sci-fi", "bromance"],
+		default: [],
+		// enum: ["action", "sci-fi", "bromance"],
 	},
+	watched: {
+		type: Date,
+		default() {
+			return Date.now()
+		}
+	}
 })
 
 export const Movie = model<IMovie>('Movie', MovieSchema)
