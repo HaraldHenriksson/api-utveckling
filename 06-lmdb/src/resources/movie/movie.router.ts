@@ -1,20 +1,25 @@
 import express from 'express'
 const router = express.Router()
-import { index, show, store } from './movie.controller'
+import * as movieController from './movie.controller'
 
 /**
  * GET /movies
  */
-router.get('/', index)
+router.get('/', movieController.index)
 
 /**
  * GET /movies/:movieId
  */
-router.get('/:movieId', show)
+router.get('/:movieId', movieController.show)
 
 /**
  * POST /movies
  */
-router.post('/', store)
+router.post('/', movieController.store)
+
+/**
+ * PATCH /movies/:movieId
+ */
+router.patch('/:movieId', movieController.update)
 
 export default router
