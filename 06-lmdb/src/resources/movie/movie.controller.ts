@@ -74,7 +74,7 @@ export const store = async (req: Request, res: Response) => {
 	} catch (err) {
 		debug("Error thrown when creating movie", err)
 
-		if (err instanceof mongoose.Error.ValidationError) {
+		if (err instanceof mongoose.Error) {
 			return res.status(400).send({ status: "error", message: err.message })
 		}
 
