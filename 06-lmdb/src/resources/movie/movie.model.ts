@@ -1,4 +1,5 @@
 import { model, Schema, Document } from 'mongoose'
+import { IDirector} from '../director/director.model'
 
 export interface IMovie extends Document {
 	title: string,
@@ -6,6 +7,7 @@ export interface IMovie extends Document {
 	releaseYear?: number,
 	genre: string[],
 	watched?: Date,
+	director?: IDirector['_id'],
 }
 
 const MovieSchema: Schema = new Schema<IMovie>({
@@ -43,6 +45,10 @@ const MovieSchema: Schema = new Schema<IMovie>({
 		default() {
 			return Date.now()
 		}
+	},
+	director: {
+		type: Schema.Types.ObjectId,
+		ref: 'Director',
 	}
 })
 
