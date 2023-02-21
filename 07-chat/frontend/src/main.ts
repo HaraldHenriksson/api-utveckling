@@ -1,6 +1,6 @@
 import './assets/scss/style.scss'
 import { io, Socket } from 'socket.io-client'
-import { ClientToServerEvents, ServerToClientEvents } from '@backend/types/shared/SocketTypes'
+import { ChatMessageData, ClientToServerEvents, ServerToClientEvents } from '@backend/types/shared/SocketTypes'
 
 const SOCKET_HOST = import.meta.env.VITE_APP_SOCKET_HOST
 
@@ -24,4 +24,33 @@ socket.on('disconnect', () => {
 // Listen for when the server says hello
 socket.on('hello', () => {
 	console.log('👋🏻 The nice server said Hello')
+})
+
+// Listen for new chat messages
+socket.on('chatMessage', (message) => {
+	console.log('📨 YAY SOMEONE WROTE SOMETHING!!!!!!!', message)
+})
+
+// Send a message to the server when form is submitted
+messageFormEl.addEventListener('submit', e => {
+	e.preventDefault()
+
+	if (!messageEl.value.trim()) {
+		return
+	}
+
+	// Construct message payload
+	const message: ChatMessageData = {
+		content: messageEl.value
+	}
+
+	// Send (emit) the message to the server
+	socket.emit('sendChatMessage', message)
+
+	console.log("Emitted sendChatMessage to server", message)
+
+	// Clear the inpt field and focus
+	messageEl.value = ''
+	messageEl.focus()
+
 })
