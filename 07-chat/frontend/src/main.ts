@@ -6,10 +6,27 @@ const SOCKET_HOST = import.meta.env.VITE_APP_SOCKET_HOST
 
 const messageEl = document.querySelector('#message') as HTMLInputElement
 const messageFormEl = document.querySelector('#message-form') as HTMLFormElement
-const messagesEl = document.querySelector('#messages') as HTMLDivElement
+const messagesEl = document.querySelector('#messages') as HTMLUListElement
 
 // Connect to Socket.IO server
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(SOCKET_HOST)
+
+// Add a message to chat
+const addMessageToChat = (message: ChatMessageData, ownMessage = false) => {
+	const messageEl = document.createElement('li')
+
+	messageEl.classList.add('message')
+
+	if (ownMessage) {
+		messageEl.classList.add('own-message')
+	}
+
+	messageEl.textContent = message.content
+
+	messagesEl.appendChild(messageEl)
+
+	messageEl.scrollIntoView({ behavior: 'smooth' })
+}
 
 // Listen for when connection is established
 socket.on('connect', () => {
@@ -29,6 +46,8 @@ socket.on('hello', () => {
 // Listen for new chat messages
 socket.on('chatMessage', (message) => {
 	console.log('📨 YAY SOMEONE WROTE SOMETHING!!!!!!!', message)
+
+	addMessageToChat(message)
 })
 
 // Send a message to the server when form is submitted
@@ -47,7 +66,11 @@ messageFormEl.addEventListener('submit', e => {
 	// Send (emit) the message to the server
 	socket.emit('sendChatMessage', message)
 
+	addMessageToChat(message, true)
+
 	console.log("Emitted sendChatMessage to server", message)
+
+
 
 	// Clear the inpt field and focus
 	messageEl.value = ''
