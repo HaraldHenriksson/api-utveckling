@@ -27,3 +27,4 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 		debug('🚶 A user disconnected', socket.id)
 	})
 }
+

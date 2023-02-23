@@ -29,7 +29,10 @@ const addMessageToChat = (message: ChatMessageData, ownMessage = false) => {
 		messageEl.classList.add('own-message')
 	}
 
-	messageEl.textContent = message.content
+	messageEl.innerHTML = ownMessage
+	? `<span class="content">${message.content}</span>`
+	: `<span class="user">${message.username}</span><span class="content">${message.content}</span>`
+
 
 	messagesEl.appendChild(messageEl)
 
@@ -74,13 +77,15 @@ socket.on('chatMessage', (message) => {
 messageFormEl.addEventListener('submit', e => {
 	e.preventDefault()
 
-	if (!messageEl.value.trim()) {
+	if (!messageEl.value.trim() || !username) {
 		return
 	}
 
 	// Construct message payload
 	const message: ChatMessageData = {
-		content: messageEl.value
+		content: messageEl.value,
+		timestamp: Date.now(),
+		username: username,
 	}
 
 	// Send (emit) the message to the server
@@ -99,10 +104,15 @@ messageFormEl.addEventListener('submit', e => {
 })
 
 // Get username from form and hte show chat
-userNameFormEl.addEventListener('submit', e => {
+ userNameFormEl.addEventListener('submit', e => {
 	e.preventDefault()
 
 	username = (userNameFormEl.querySelector('#username') as HTMLInputElement).value.trim()
+
+	// If no username, no chat for you
+	if (!username) {
+		return
+	}
 
 	// Show chat view
 	showChatView()
