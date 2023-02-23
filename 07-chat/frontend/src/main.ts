@@ -123,6 +123,18 @@ messageFormEl.addEventListener('submit', e => {
 		return
 	}
 
-	// Show chat view
-	showChatView()
+	// Emit `userJoin` -event to the server and wait for acknowledgement
+	// before show the user chat view
+	socket.emit('userJoin', username, (success) => {
+		console.log("Join was success?", success)
+
+		if (!success) {
+		alert("NO ACCESS")
+		return
+	}
+
+		showChatView()
+	})
+
+	console.log("Emitted 'userJoin' event to server", username)
 })
