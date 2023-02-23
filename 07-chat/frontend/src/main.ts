@@ -29,9 +29,18 @@ const addMessageToChat = (message: ChatMessageData, ownMessage = false) => {
 		messageEl.classList.add('own-message')
 	}
 
+	// Get human readable time
+	const time = new Date(message.timestamp).toLocaleTimeString() // "13:37:00"
+
 	messageEl.innerHTML = ownMessage
-	? `<span class="content">${message.content}</span>`
-	: `<span class="user">${message.username}</span><span class="content">${message.content}</span>`
+	? `
+	<span class="content">${message.content}</span>
+	<span class="time">${time}</span>`
+	: `
+	<span class="user">${message.username}</span>
+	<span class="content">${message.content}</span>
+	<span class="time">${time}</span>`
+
 
 
 	messagesEl.appendChild(messageEl)
