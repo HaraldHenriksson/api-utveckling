@@ -3,17 +3,17 @@
  */
 import Debug from 'debug'
 import { Socket } from 'socket.io'
-import { ClientToServerEvents, ServerToClientEvents } from '../types/shared/SocketTypes'
+import { ClientToServerEvents, NoticeData, ServerToClientEvents } from '../types/shared/SocketTypes'
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller')
 
-// Handle the user socket connection
+// Handle the user connecting
 export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToClientEvents>) => {
-	debug('👋 A user connected', socket.id)
+	debug('🙋🏼 A user connected', socket.id)
 
 	// Say hello to the user
-	debug('🗣️ Said hello to the user')
+	debug('👋🏻 Said hello to the user')
 	socket.emit('hello')
 
 	// Listen for incoming chat messages
@@ -26,13 +26,20 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 	socket.on('userJoin', (username, callback) => {
 		debug('👶🏽 User %s wants to join the chat', username)
 
+		const notice: NoticeData = {
+			timestamp: Date.now(),
+			username,
+		}
+
+		// Let everyone know a new user has joined
+		socket.broadcast.emit('userJoined', notice)
+
 		// Let user know they're welcome
 		callback(true)
 	})
 
 	// Handle user disconnecting
 	socket.on('disconnect', () => {
-		debug('🚶 A user disconnected', socket.id)
+		debug('✌🏻 A user disconnected', socket.id)
 	})
 }
-
