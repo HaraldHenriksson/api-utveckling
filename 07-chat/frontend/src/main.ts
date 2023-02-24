@@ -21,6 +21,7 @@ const chatWrapperEl = document.querySelector('#chat-wrapper') as HTMLDivElement
 const startEl = document.querySelector('#start') as HTMLDivElement
 
 // User Details
+let roomId: string | null = null
 let username: string | null = null
 
 // Connect to Socket.IO server
@@ -92,18 +93,32 @@ const showChatView = () => {
 
 // Show welcome view
 const showWelcomeView = () => {
+	const connectBtnEl = document.querySelector('#connectBtn') as HTMLButtonElement
+	const roomEl = document.querySelector('#room') as HTMLSelectElement
+
+	// Clear room list and disable connect-button
+	connectBtnEl.disabled = true
+	roomEl.innerHTML = `<option selected>Loading...</option>`
+
 	// Request a list of rooms from the server
-	console.log("requesting rooms")
+	console.log("🏨 Requesting rooms")
 	socket.emit('getRoomList', (rooms) => {
-		console.log(rooms)
+		// We gots lots of rooms
+		console.log("YAY ROOMS!", rooms)
+
+		// Update #room with options for each room
+		roomEl.innerHTML = rooms
+			.map(room => `<option value="${room.id}">${room.name}</option>`)
+			.join('')
+
+		// Enable "Connect"-button once we have a room list
+		connectBtnEl.disabled = false
 	})
 
-	// Enable "Connect"-button once we have a room list
-
-	// Hide chat (if visable)
+	// Hide chat (if visible)
 	chatWrapperEl.classList.add('hide')
 
-	// Hide welcome view
+	// Show welcome view
 	startEl.classList.remove('hide')
 }
 
@@ -124,8 +139,8 @@ socket.on('disconnect', () => {
 socket.io.on('reconnect', () => {
 	console.log('🍽️ Reconnected to the server')
 	// Broadcast userJoin event, but only if we were in the chat previously
-	if (username) {
-		socket.emit('userJoin', username, (success) => {
+	if (username && roomId) {
+		socket.emit('userJoin', username, roomId, (success) => {
 			addNoticeToChat('You reconnected 🥳', Date.now())
 		})
 	}
@@ -188,16 +203,17 @@ usernameFormEl.addEventListener('submit', e => {
 	e.preventDefault()
 
 	// Get username
+	roomId = (usernameFormEl.querySelector('#room') as HTMLSelectElement).value
 	username = (usernameFormEl.querySelector('#username') as HTMLInputElement).value.trim()
 
 	// If no username, NO CHAT FOR YOU
-	if (!username) {
+	if (!username || !roomId) {
 		return
 	}
 
 	// Emit `userJoin`-event to the server and wait for acknowledgement
 	// before showing the chat view
-	socket.emit('userJoin', username, (success) => {
+	socket.emit('userJoin', username, roomId, (success) => {
 		console.log("Join was success?", success)
 
 		if (!success) {

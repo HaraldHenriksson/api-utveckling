@@ -10,9 +10,9 @@ export interface ServerToClientEvents {
 
 // Events emitted by the client to the server
 export interface ClientToServerEvents {
-	getRoomList: (callback: (rooms: Room ) => void) => void
+	getRoomList: (callback: (rooms: Room[] ) => void) => void
 	sendChatMessage: (message: ChatMessageData) => void
-	userJoin: (username: string, callback: (success: boolean) => void) => void
+	userJoin: (username: string, roomId: string, callback: (success: boolean) => void) => void
 }
 
 // Events between servers

@@ -4,6 +4,7 @@
 import Debug from 'debug'
 import { Socket } from 'socket.io'
 import { ClientToServerEvents, NoticeData, ServerToClientEvents } from '../types/shared/SocketTypes'
+import prisma from '../prisma'
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller')
@@ -16,6 +17,19 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 	debug('👋🏻 Said hello to the user')
 	socket.emit('hello')
 
+	// Listen for room list request
+	socket.on('getRoomList', async (callback) => {
+		// Query database for list of rooms
+		const rooms = await prisma.room.findMany()
+
+		debug('🏨 Got request for rooms, sending room list %o', rooms)
+
+		// Send room list
+		setTimeout(() => {
+			callback(rooms)
+		}, 1500)
+	})
+
 	// Listen for incoming chat messages
 	socket.on('sendChatMessage', (message) => {
 		debug('📨 New chat message', socket.id, message)
@@ -23,16 +37,19 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 	})
 
 	// Listen for a user join request
-	socket.on('userJoin', (username, callback) => {
-		debug('👶🏽 User %s wants to join the chat', username)
+	socket.on('userJoin', (username, roomId, callback) => {
+		debug('👶🏽 User %s wants to join the room %s', username, roomId)
 
 		const notice: NoticeData = {
 			timestamp: Date.now(),
 			username,
 		}
 
+		// Add user to room `roomId
+		socket.join(roomId)
+
 		// Let everyone know a new user has joined
-		socket.broadcast.emit('userJoined', notice)
+		socket.broadcast.to(roomId).emit('userJoined', notice)
 
 		// Let user know they're welcome
 		callback(true)
