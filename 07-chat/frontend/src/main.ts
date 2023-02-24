@@ -92,13 +92,27 @@ const showChatView = () => {
 
 // Show welcome view
 const showWelcomeView = () => {
+	// Request a list of rooms from the server
+	console.log("requesting rooms")
+	socket.emit('getRoomList', (rooms) => {
+		console.log(rooms)
+	})
+
+	// Enable "Connect"-button once we have a room list
+
+	// Hide chat (if visable)
 	chatWrapperEl.classList.add('hide')
+
+	// Hide welcome view
 	startEl.classList.remove('hide')
 }
 
 // Listen for when connection is established
 socket.on('connect', () => {
 	console.log('💥 Connected to the server', socket.id)
+
+	// Show welcome view
+	showWelcomeView()
 })
 
 // Listen for when the server got tired of us
