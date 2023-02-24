@@ -172,13 +172,14 @@ socket.on('userJoined', (notice) => {
 messageFormEl.addEventListener('submit', e => {
 	e.preventDefault()
 
-	if (!messageEl.value.trim() || !username) {
+	if (!messageEl.value.trim() || !username || !roomId) {
 		return
 	}
 
 	// Construct message payload
 	const message: ChatMessageData = {
 		content: messageEl.value,
+		roomId,
 		timestamp: Date.now(),
 		username,  // username: username
 	}
@@ -213,13 +214,18 @@ usernameFormEl.addEventListener('submit', e => {
 
 	// Emit `userJoin`-event to the server and wait for acknowledgement
 	// before showing the chat view
-	socket.emit('userJoin', username, roomId, (success) => {
-		console.log("Join was success?", success)
+	socket.emit('userJoin', username, roomId, (result) => {
+		console.log("Join was success?", result)
 
-		if (!success) {
+		if (!result.success) {
 			alert("NO ACCESS 4 US")
 			return
 		}
+
+		const roomInfo = result.data!;
+
+		// Update chat view tilte with room name
+		(document.querySelector('#chat-title') as HTMLHeadElement).innerText = roomInfo.name
 
 		// Yay we're allowed to join
 		console.log("Showing chat view")
