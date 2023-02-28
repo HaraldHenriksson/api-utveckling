@@ -5,6 +5,7 @@ import Debug from 'debug'
 import { Socket } from 'socket.io'
 import { ClientToServerEvents, NoticeData, ServerToClientEvents } from '../types/shared/SocketTypes'
 import prisma from '../prisma'
+import { getUsersInRoom } from '../services/UserService'
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller')
@@ -62,24 +63,30 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 		// Add user to room `roomId
 		socket.join(roomId)
 
-		// Create a User in the database and set roomId
-		const user = await prisma.user.create({
-			data: {
+		// Create a User in the database and set roomId. If they do not exist
+		const user = await prisma.user.upsert({ // Combination of update and insert
+			where: {
 				id: socket.id,
+			},
+			create: {
+				id: socket.id,
+				name: username,
+				roomId: roomId,
+			},
+			update: {
 				name: username,
 				roomId: roomId,
 			}
 		})
 
 		// Retreve a list of Users for the room
-		const usersInRoom = await prisma.user.findMany({
-			where: {
-				roomId: roomId,
-			}
-		})
+		const usersInRoom = await getUsersInRoom(roomId)
 
 		// Let everyone know a new user has joined
 		socket.broadcast.to(roomId).emit('userJoined', notice)
+
+		// Broadcast a updated user list to everyone
+		socket.broadcast.to(roomId).emit('onlineUsers', usersInRoom)
 
 		// Let user know they're welcome
 		callback({
@@ -114,5 +121,10 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 				id: socket.id
 			}
 		})
+
+		// Broadcast new list of nonline users to the room
+		const users = await getUsersInRoom(user.roomId)
+		socket.broadcast.emit('onlineUsers', users)
 	})
 }
+
