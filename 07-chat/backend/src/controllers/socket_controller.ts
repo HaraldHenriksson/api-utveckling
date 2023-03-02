@@ -7,6 +7,7 @@ import { ClientToServerEvents, NoticeData, ServerToClientEvents } from '../types
 import prisma from '../prisma'
 import { getUsersInRoom } from '../services/UserService'
 import { getRoom, getRooms } from '../services/RoomSrvice'
+import { createMessage } from '../services/MessageService'
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller')
@@ -33,12 +34,13 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 	})
 
 	// Listen for incoming chat messages
-	socket.on('sendChatMessage', (message) => {
+	socket.on('sendChatMessage', async (message) => {
 		debug('📨 New chat message', socket.id, message)
 
-
-
 		socket.broadcast.to(message.roomId).emit('chatMessage', message)
+
+		// Save message to db createMessage
+		await createMessage(message)
 	})
 
 	// Listen for a user join request
