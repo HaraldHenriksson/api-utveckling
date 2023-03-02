@@ -18,12 +18,24 @@ export const getRooms = () => {
  * @param roomId ID of room to get
  */
 export const getRoom = (roomId: string) => {
+	const now = Date.now()
+	const past = now - (10 * 60 * 1000)
 	return prisma.room.findUnique({
 		where: {
 			id: roomId,
 		},
 		include: {
-			messages: true,
+			messages: {
+				where: {
+					timestamp: {
+						gte: past,    // WHERE timestamp >=
+					}
+				},
+				// orderBy: {
+				// 	timestamp: 'desc'
+				// },
+				take: -5,
+			},
 		}
 	})
 }
