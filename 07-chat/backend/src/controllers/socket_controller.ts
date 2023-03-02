@@ -6,6 +6,7 @@ import { Socket } from 'socket.io'
 import { ClientToServerEvents, NoticeData, ServerToClientEvents } from '../types/shared/SocketTypes'
 import prisma from '../prisma'
 import { getUsersInRoom } from '../services/UserService'
+import { getRoom, getRooms } from '../services/RoomSrvice'
 
 // Create a new debug instance
 const debug = Debug('chat:socket_controller')
@@ -21,7 +22,7 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 	// Listen for room list request
 	socket.on('getRoomList', async (callback) => {
 		// Query database for list of rooms
-		const rooms = await prisma.room.findMany()
+		const rooms = await getRooms()
 
 		debug('🏨 Got request for rooms, sending room list %o', rooms)
 
@@ -34,6 +35,9 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 	// Listen for incoming chat messages
 	socket.on('sendChatMessage', (message) => {
 		debug('📨 New chat message', socket.id, message)
+
+
+
 		socket.broadcast.to(message.roomId).emit('chatMessage', message)
 	})
 
@@ -42,11 +46,7 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 		debug('👶🏽 User %s wants to join the room %s', username, roomId)
 
 		// Get room from database
-		const room = await prisma.room.findUnique({
-			where: {
-				id: roomId
-			}
-		})
+		const room = await getRoom(roomId)
 
 		if (!room) {
 			return callback({
