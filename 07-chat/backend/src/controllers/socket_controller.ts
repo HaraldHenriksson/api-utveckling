@@ -96,6 +96,7 @@ export const handleConnection = (socket: Socket<ClientToServerEvents, ServerToCl
 			data: {
 				id: roomId,
 				name: room.name,
+				messages: room.messages,
 				users: usersInRoom, // Send the user the list of user in the room
 			}
 		})

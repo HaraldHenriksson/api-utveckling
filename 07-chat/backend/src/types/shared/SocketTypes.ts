@@ -1,5 +1,5 @@
 export { }
-import { Room, User } from '@prisma/client'
+import { Message, Room, User } from '@prisma/client'
 
 // Re-export prisma models so frontend is happy
 export { Room, User }
@@ -39,6 +39,7 @@ export interface NoticeData {
 
 // Room info payload
 export interface RoomInfoData extends Room {
+	messages: Message[]
 	users: User[]
 }
 
